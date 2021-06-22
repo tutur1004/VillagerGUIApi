@@ -3,3 +3,4 @@ main: fr.milekat.villagerguiapi.Main
 version: 3.0
 authors: [MileKat]
 api-version: 1.17
+depend: [Citizens]
