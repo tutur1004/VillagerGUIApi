@@ -12,16 +12,18 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
-
-public class ApiTest implements Listener {
-    private final Plugin plugin;
-    public ApiTest(Plugin plugin) {
-        this.plugin = plugin;
-    }
+/**
+ * This class is only to test and show how to use my version of VillagerGuiAPI !
+ * this example work with Citizens plugin
+ */
+public record ApiTestEvent(Plugin plugin) implements Listener {
     @EventHandler
     public void onNpcClick(NPCRightClickEvent event) {
         List<VillagerTrade> trades = new ArrayList<>();
-        trades.add(new VillagerTrade(new ItemStack(Material.COBBLESTONE), new ItemStack(Material.EMERALD, 24), 1000));
+        if (event.getNPC().getId()==0) {
+            trades.add(new VillagerTrade(new ItemStack(Material.COBBLESTONE), new ItemStack(Material.EMERALD, 24), 1000));
+        }
+        trades.add(new VillagerTrade(new ItemStack(Material.DIRT), new ItemStack(Material.EMERALD, 16), 1000));
         VillagerInventory tradeGui = new VillagerInventory(plugin, event.getClicker(), trades);
         tradeGui.setName(event.getNPC().getName());
         tradeGui.open();

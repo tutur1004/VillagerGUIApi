@@ -1,6 +1,7 @@
 package fr.milekat.villagerguiapi.api.villagergui.classes;
 
 import fr.milekat.villagerguiapi.api.villagergui.ApiEvents;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -21,10 +22,6 @@ public class VillagerInventory {
 		this.plugin = plugin;
 		this.player = player;
 		this.trades = trades;
-	}
-
-	public Plugin getPlugin() {
-		return plugin;
 	}
 
 	public Player getPlayer() {
@@ -48,6 +45,6 @@ public class VillagerInventory {
 	}
 
 	public void open() {
-		new ApiEvents(this).openFor(player);
+		Bukkit.getServer().getPluginManager().registerEvents(new ApiEvents(this), plugin);
 	}
 }

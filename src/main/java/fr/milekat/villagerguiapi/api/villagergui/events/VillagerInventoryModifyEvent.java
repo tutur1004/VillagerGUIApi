@@ -7,12 +7,11 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
 public class VillagerInventoryModifyEvent extends Event {
-
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
 
-	private VillagerInventory inventory;
-	private Player player;
-	private ItemStack itemChanged;
+	private final VillagerInventory inventory;
+	private final Player player;
+	private final ItemStack itemChanged;
 
 	public VillagerInventoryModifyEvent(VillagerInventory inventory, Player player, ItemStack itemChanged) {
 		super();

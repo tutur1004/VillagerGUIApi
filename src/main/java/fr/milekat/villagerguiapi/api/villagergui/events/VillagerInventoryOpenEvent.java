@@ -8,8 +8,8 @@ import org.bukkit.event.HandlerList;
 public class VillagerInventoryOpenEvent extends Event {
 	private static final HandlerList HANDLERS = new HandlerList();
 
-	private VillagerInventory inventory;
-	private Player player;
+	private final VillagerInventory inventory;
+	private final Player player;
 
 	public VillagerInventoryOpenEvent(VillagerInventory inventory, Player player) {
 		super();
