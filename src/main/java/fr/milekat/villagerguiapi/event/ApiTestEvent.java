@@ -2,6 +2,9 @@ package fr.milekat.villagerguiapi.event;
 
 import fr.milekat.villagerguiapi.api.villagergui.classes.VillagerInventory;
 import fr.milekat.villagerguiapi.api.villagergui.classes.VillagerTrade;
+import fr.milekat.villagerguiapi.api.villagergui.events.VillagerInventoryCloseEvent;
+import fr.milekat.villagerguiapi.api.villagergui.events.VillagerInventoryModifyEvent;
+import fr.milekat.villagerguiapi.api.villagergui.events.VillagerInventoryOpenEvent;
 import fr.milekat.villagerguiapi.api.villagergui.events.VillagerTradeCompleteEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import org.bukkit.Material;
@@ -32,5 +35,24 @@ public record ApiTestEvent(Plugin plugin) implements Listener {
     @EventHandler
     public void onTrade(VillagerTradeCompleteEvent event) {
         event.getPlayer().sendMessage(event.getTrade().getItemOne().getType() + ":" + event.getTrade().getItemOne().getAmount() + ":" + event.getCount());
+        //event.setCancelled(true); //  Can be cancelled, Test it !
+    }
+
+    @EventHandler
+    public void onTradeOpenGui(VillagerInventoryOpenEvent event) {
+        event.getPlayer().sendMessage("Open");
+        //event.setCancelled(true); //  Can be cancelled, Test it !
+    }
+
+    @EventHandler
+    public void onTradeCloseGui(VillagerInventoryCloseEvent event) {
+        event.getPlayer().sendMessage("Close");
+        //event.setCancelled(true); //  Can be cancelled, Test it !
+    }
+
+    @EventHandler
+    public void onTradeClickGui(VillagerInventoryModifyEvent event) {
+        event.getPlayer().sendMessage("Click");
+        //event.setCancelled(true); //  Can be cancelled, Test it !
     }
 }

@@ -24,6 +24,10 @@ public class VillagerInventory {
 		this.trades = trades;
 	}
 
+	public Plugin getPlugin() {
+		return plugin;
+	}
+
 	public Player getPlayer() {
 		return player;
 	}

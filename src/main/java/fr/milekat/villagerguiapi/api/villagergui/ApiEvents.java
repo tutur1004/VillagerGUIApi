@@ -19,37 +19,48 @@ import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.MerchantInventory;
 
 public class ApiEvents implements Listener {
-    private final InventoryView merchantView;
     private final VillagerInventory inventory;
+    private final Merchant merchant;
+    private InventoryView merchantView;
 
     public ApiEvents(VillagerInventory inventory) {
         this.inventory = inventory;
         //  Create Bukkit Merchant inventory
-        Merchant merchant = Bukkit.createMerchant(inventory.getName());
+        merchant = Bukkit.createMerchant(inventory.getName());
         merchant.setRecipes(ApiUtils.toBukkitRecipes(inventory));
         //  Open inventory and trigger VillagerInventoryOpenEvent
         merchantView = inventory.getPlayer().openMerchant(merchant, true);
-        Bukkit.getPluginManager().callEvent(new VillagerInventoryOpenEvent(inventory, inventory.getPlayer()));
-    }
-
-    @EventHandler
-    public void onInventoryClose(InventoryCloseEvent event) {
-        if (event.getPlayer().getOpenInventory().equals(merchantView)) {
-            Bukkit.getPluginManager().callEvent(new VillagerInventoryCloseEvent(inventory, (Player) event.getPlayer()));
+        VillagerInventoryOpenEvent inventoryOpenEvent = new VillagerInventoryOpenEvent(inventory, inventory.getPlayer());
+        Bukkit.getPluginManager().callEvent(inventoryOpenEvent);
+        if (inventoryOpenEvent.isCancelled()) {
+            inventory.getPlayer().closeInventory();
             HandlerList.unregisterAll(this);
         }
     }
 
     @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        if (!event.getPlayer().getOpenInventory().equals(merchantView)) return;
+        VillagerInventoryCloseEvent inventoryCloseEvent = new VillagerInventoryCloseEvent(inventory, (Player) event.getPlayer());
+        Bukkit.getPluginManager().callEvent(inventoryCloseEvent);
+        if (inventoryCloseEvent.isCancelled()) Bukkit.getScheduler().runTask(inventory.getPlugin(), ()-> merchantView = inventory.getPlayer().openMerchant(merchant, true));
+        else HandlerList.unregisterAll(this);
+    }
+
+    @EventHandler
     public void onClick(InventoryClickEvent event) {
         if (event.getAction()==InventoryAction.NOTHING || !event.getWhoClicked().getOpenInventory().equals(merchantView)) return;
-        Bukkit.getPluginManager().callEvent(new VillagerInventoryModifyEvent(inventory, inventory.getPlayer(), event.getCurrentItem()));
+        VillagerInventoryModifyEvent inventoryModifyEvent = new VillagerInventoryModifyEvent(inventory, inventory.getPlayer(), event.getCurrentItem());
+        Bukkit.getPluginManager().callEvent(inventoryModifyEvent);
+        if (inventoryModifyEvent.isCancelled()) event.setCancelled(true);
         if (event.getRawSlot() != 2) return;
         //  Get the selected trade (Only work for Bukkit 1.9+)
         VillagerTrade trade = inventory.getTrades().get(((MerchantInventory) event.getWhoClicked().getOpenInventory().getTopInventory()).getSelectedRecipeIndex());
         int tradesCount = ApiUtils.getTradesCount(event, trade);
         if (tradesCount != 0) {
-            Bukkit.getPluginManager().callEvent(new VillagerTradeCompleteEvent(inventory, inventory.getPlayer(), trade, tradesCount));
+            VillagerTradeCompleteEvent tradeCompleteEvent = new VillagerTradeCompleteEvent(inventory, inventory.getPlayer(), trade, tradesCount);
+            Bukkit.getPluginManager().callEvent(tradeCompleteEvent);
+            if (tradeCompleteEvent.isCancelled()) event.setCancelled(true);
         } else event.setCancelled(true);
     }
 }

@@ -3,11 +3,13 @@ package fr.milekat.villagerguiapi.api.villagergui.events;
 import fr.milekat.villagerguiapi.api.villagergui.classes.VillagerInventory;
 import fr.milekat.villagerguiapi.api.villagergui.classes.VillagerTrade;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class VillagerTradeCompleteEvent extends Event {
+public class VillagerTradeCompleteEvent extends Event implements Cancellable {
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
+	private boolean CANCELLED;
 
 	private final VillagerInventory inventory;
 	private final Player player;
@@ -47,4 +49,13 @@ public class VillagerTradeCompleteEvent extends Event {
 		return HANDLERS_LIST;
 	}
 
+	@Override
+	public boolean isCancelled() {
+		return this.CANCELLED;
+	}
+
+	@Override
+	public void setCancelled(boolean cancel) {
+		this.CANCELLED = cancel;
+	}
 }
