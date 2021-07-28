@@ -7,7 +7,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
-public class VillagerInventoryModifyEvent extends Event implements Cancellable {
+public class VillagerInventoryClickEvent extends Event implements Cancellable {
 	private static final HandlerList HANDLERS_LIST = new HandlerList();
 	private boolean CANCELLED;
 
@@ -15,7 +15,7 @@ public class VillagerInventoryModifyEvent extends Event implements Cancellable {
 	private final Player player;
 	private final ItemStack itemChanged;
 
-	public VillagerInventoryModifyEvent(VillagerInventory inventory, Player player, ItemStack itemChanged) {
+	public VillagerInventoryClickEvent(VillagerInventory inventory, Player player, ItemStack itemChanged) {
 		super();
 		this.inventory = inventory;
 		this.player = player;
